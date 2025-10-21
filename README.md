@@ -14,6 +14,7 @@ modelagem_preditiva/
 ├── data/           # conjuntos de dados brutos e processados (⚠️ ignorados pelo Git)
 ├── code/           # scripts de análise e modelagem
 ├── images/         # gráficos, curvas ROC e outras visualizações
+├── docs/           # enunciado da APS e relatório final
 ├── .gitignore      # arquivos e pastas ignorados no versionamento
 └── README.md       # visão geral do projeto
 
