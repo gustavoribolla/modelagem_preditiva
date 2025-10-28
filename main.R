@@ -27,16 +27,15 @@ cat("Arquivos detectados (ordem de execução):\n",
 # Executa cada script isolado
 for (path in scripts) {
   cat(">>> Iniciando ", basename(path), "...\n", sep = "")
-  tryCatch(
-    {
-      source(path, local = new.env(parent = globalenv()))
-      cat(">>> Concluído ", basename(path), ".\n\n", sep = "")
-    },
-    error = function(e) {
-      cat("[ERRO] em ", basename(path), ": ", conditionMessage(e), "\n\n", sep = "")
-    },
-    warning = function(w) {
-      cat("[AVISO] em ", basename(path), ": ", conditionMessage(w), "\n\n", sep = "")
-    }
-  )
+  tryCatch({
+    source(path, local = globalenv(), chdir = FALSE)
+  }, error = function(e) {
+    cat("[ERRO] em ", basename(path), ": ", conditionMessage(e), "\n\n", sep = "")
+  })
+  if (basename(path) == "Q1.R") {
+    cat(sprintf("[Q1] baseline=%s | comparison=%s\n",
+                file.exists("images/Q1_ROC_baseline.png"),
+                file.exists("images/Q1_ROC_comparison.png")))
+  }
+  cat(">>> Concluído ", basename(path), ".\n\n", sep = "")
 }
