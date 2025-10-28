@@ -8,15 +8,16 @@ O estudo envolve a construção, comparação e interpretação de diferentes mo
 ## Estrutura do Projeto
 
 ```
-
 modelagem_preditiva/
 │
-├── data/           # conjuntos de dados brutos e processados (⚠️ ignorados pelo Git)
-├── code/           # scripts de análise e modelagem
-├── images/         # gráficos, curvas ROC e outras visualizações
-├── docs/           # enunciado da APS e relatório final
-├── .gitignore      # arquivos e pastas ignorados no versionamento
-└── README.md       # visão geral do projeto
+├── data/                           # conjuntos de dados brutos e processados (⚠️ ignorados pelo Git)
+├── code/                           # scripts de análise e modelagem
+├── images/                         # gráficos, curvas ROC e outras visualizações
+├── docs/                           # enunciado da APS e relatório final
+├── .gitignore                      # arquivos e pastas ignorados no versionamento
+├── README.md                       # visão geral do projeto
+├── main.R                          # arquivo pai, que gere os exercícios contidos na pasta code
+└── modelagem_preditiva.Rproj       # arquivo RStudio do projeto 
 
 ```
 
@@ -64,7 +65,7 @@ O projeto pode ser executado no **VS Code** e **RStudio**.
 ## Relatório
 
 O relatório completo está disponível no Google Docs:
-📄 [Acesse aqui](https://docs.google.com/document/d/1vuZ03j-OPCYYT7cZFc6p74bO_Uf6n_fkRAa2pz-mrro/edit?usp=sharing)
+📄 [Acesse aqui](https://alinsperedu-my.sharepoint.com/:w:/g/personal/gustavocr2_al_insper_edu_br/ES2YJpYvL7BOj9zKbNkkS_MBnUZtruXpNpnpJ3LVVA7_EA?e=1Rf1pi)
 
 > O relatório apresenta a fundamentação teórica, resultados experimentais, discussões e conclusões do projeto.
 
