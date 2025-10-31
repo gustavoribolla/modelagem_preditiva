@@ -1,4 +1,4 @@
-# Q1 — Regressão Logística vs Árvore de Classificação (AUC em teste)
+# Q1 - Regressão Logística vs Árvore de Classificação (AUC em teste)
 
 set.seed(42)
 suppressPackageStartupMessages({
