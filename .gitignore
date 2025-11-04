@@ -4,7 +4,9 @@
 
 # Session Data files
 .RData
-.RDataTmp
+.RDataTmp*
+*.tmp
+*.log
 
 # User-specific files
 .Ruserdata
@@ -47,3 +49,5 @@ rsconnect/
 
 #Extras
 /data
+
+catboost_info/
