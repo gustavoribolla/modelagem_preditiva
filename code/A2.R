@@ -22,13 +22,12 @@ for (cn in names(tr)) {
 
 y_test <- te$price
 rmse <- function(y, yhat) sqrt(mean((y - yhat)^2))
-if (!dir.exists("images")) dir.create("images", recursive = TRUE)
 
 # Regressão Linear
 m_lin <- lm(price ~ ., data = tr)
 p_lin <- predict(m_lin, te)
 rmse_lin <- rmse(y_test, p_lin)
-png("images/A2_pred_vs_obs_linear.png", 1200, 800, res = 120)
+png("images/A2/A2_pred_vs_obs_linear.png", 1200, 800, res = 120)
 plot(y_test, p_lin, pch = 16, cex = 0.7,
      xlab = "Preço observado (teste)", ylab = "Preço previsto",
      main = sprintf("Previsto vs Observado — Regressão Linear (RMSE=%.2f)", rmse_lin))
@@ -38,7 +37,7 @@ abline(0,1,lty=2); dev.off()
 m_tree <- tree(price ~ ., data = tr)
 p_tree <- predict(m_tree, te)
 rmse_tree <- rmse(y_test, p_tree)
-png("images/A2_pred_vs_obs_tree.png", 1200, 800, res = 120)
+png("images/A2/A2_pred_vs_obs_tree.png", 1200, 800, res = 120)
 plot(y_test, p_tree, pch = 16, cex = 0.7,
      xlab = "Preço observado (teste)", ylab = "Preço previsto",
      main = sprintf("Previsto vs Observado — Árvore (RMSE=%.2f)", rmse_tree))
@@ -48,7 +47,7 @@ abline(0,1,lty=2); dev.off()
 m_rf <- ranger(price ~ ., data = tr, num.trees = 500, seed = 42)
 p_rf <- predict(m_rf, te)$predictions
 rmse_rf <- rmse(y_test, p_rf)
-png("images/A2_pred_vs_obs_rf.png", 1200, 800, res = 120)
+png("images/A2/A2_pred_vs_obs_rf.png", 1200, 800, res = 120)
 plot(y_test, p_rf, pch = 16, cex = 0.7,
      xlab = "Preço observado (teste)", ylab = "Preço previsto",
      main = sprintf("Previsto vs Observado — Random Forest (RMSE=%.2f)", rmse_rf))
@@ -77,7 +76,7 @@ if (has_cb) {
   p_cb <- catboost.predict(m_cb, pool_te)
   rmse_cb <- rmse(y_test, p_cb)
 
-  png("images/A2_pred_vs_obs_catboost.png", 1200, 800, res = 120)
+  png("images/A2/A2_pred_vs_obs_catboost.png", 1200, 800, res = 120)
   plot(y_test, p_cb, pch = 16, cex = 0.7,
        xlab = "Preço observado (teste)", ylab = "Preço previsto",
        main = sprintf("Previsto vs Observado — CatBoost (RMSE=%.2f)", rmse_cb))

@@ -63,8 +63,7 @@ cat(sprintf("Em B=%d: OOB=%.1f | Test=%.1f | Diferença=%.1f (%.2f%%)\n",
 
 
 # Gráfico OOB vs Teste
-if (!dir.exists("images")) dir.create("images", recursive = TRUE)
-png("images/Q4_OOB_vs_Test.png", width = 1200, height = 800, res = 120)
+png("images/Q4/Q4_OOB_vs_Test.png", width = 1200, height = 800, res = 120)
 plot(ntree_seq, oob_rmse, type = "l", lwd = 2,
      xlab = "Número de árvores (B)", ylab = "RMSE",
      main = "California Housing — OOB RMSE vs Test RMSE (ranger)")

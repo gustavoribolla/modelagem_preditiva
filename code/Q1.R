@@ -32,7 +32,7 @@ roc_tree <- roc(y_test01, p_tree, quiet = TRUE); auc_tree <- as.numeric(auc(roc_
 cat(sprintf("\nAUC (baseline)\n  Logística: %.4f\n  Árvore   : %.4f\n", auc_log, auc_tree))
 
 # ROC baseline
-png("images/Q1_ROC_baseline.png", width = 1100, height = 750, res = 120)
+png("images/Q1/Q1_ROC_baseline.png", width = 1100, height = 750, res = 120)
 plot(roc_log,  main = "Q1 — ROC (Baseline): Logística (linha cheia) vs Árvore (tracejada)")
 plot(roc_tree, add = TRUE, lty = 2)
 legend("bottomright",
@@ -49,7 +49,7 @@ roc_log2 <- roc(y_test01, p_log2, quiet = TRUE); auc_log2 <- as.numeric(auc(roc_
 cat(sprintf("\nAUC (logística aprimorada)\n  Logística + quad.+interação: %.4f\n", auc_log2))
 
 # ROC comparativa (árvore x logísticas)
-png("images/Q1_ROC_comparison.png", width = 1100, height = 750, res = 120)
+png("images/Q1/Q1_ROC_comparison.png", width = 1100, height = 750, res = 120)
 plot(roc_tree,  main = "Q1 — ROC: Árvore (cheia), Logística (tracejada), Logística Aprimorada (pontilhada)")
 plot(roc_log,  add = TRUE, lty = 2)
 plot(roc_log2, add = TRUE, lty = 3)

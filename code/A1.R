@@ -121,8 +121,7 @@ if (!dir.exists("results")) dir.create("results", recursive = TRUE)
 write.csv(res, "results/A1_resultados.csv", row.names = FALSE)
 
 # ROC de todos
-if (!dir.exists("images")) dir.create("images", recursive = TRUE)
-png("images/A1_ROC_all.png", width = 1200, height = 800, res = 120)
+png("images/A1/A1_ROC_all.png", width = 1200, height = 800, res = 120)
 nm <- names(rocs)
 plot(rocs[[nm[1]]], main = "Churn — ROC (todos os modelos)")
 if (length(nm) >= 2) for (i in 2:length(nm)) plot(rocs[[nm[i]]], add = TRUE, lty = i)
