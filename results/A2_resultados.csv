@@ -1,0 +1,5 @@
+"Modelo","RMSE"
+"Linear","6.67"
+"Árvore","6.66"
+"RandomForest","4.15"
+"CatBoost","4.07"
