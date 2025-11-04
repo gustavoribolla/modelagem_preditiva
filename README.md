@@ -33,6 +33,23 @@ modelagem_preditiva/
 
 ---
 
+### Pasta `data/`
+
+A pasta `data/` contém todos os conjuntos de dados utilizados nas análises, divididos por aplicação e etapa.
+Esses arquivos **não são versionados no GitHub** por questões de tamanho e privacidade, mas devem estar disponíveis localmente para a execução do projeto.
+
+| Arquivo               | Descrição                                                                                             |
+| --------------------- | ----------------------------------------------------------------------------------------------------- |
+| **`Q1_training.csv`** | Conjunto de **treinamento** utilizado para ajustar os modelos da Questão 1 (classificação binária).   |
+| **`Q1_test.csv`**     | Conjunto de **teste** correspondente à Questão 1, usado para calcular a AUC e comparar modelos.       |
+| **`churn.csv`**       | Base de dados de **clientes bancários**, utilizada na Aplicação 1 para prever o cancelamento (churn). |
+| **`used_cars.csv`**   | Dados de **veículos Mercedes usados**, aplicados na regressão da Aplicação 2 para estimar preços.     |
+| **`california.csv`**  | Base **California Housing**, usada nas Questões 2–4 para explorar bagging, random forests e erro OOB. |
+
+> ⚠️ Caso os arquivos não estejam presentes, é necessário colocá-los manualmente na pasta `data/` antes de rodar os scripts.
+
+---
+
 ## Execução do Projeto
 
 O projeto pode ser executado no **VS Code** e **RStudio**.
