@@ -1,0 +1,4 @@
+"Modelo","AUC"
+"Logística (baseline)",0.51498382858298
+"Árvore",0.965431490465602
+"Logística (aprimorada)",0.978850818677987

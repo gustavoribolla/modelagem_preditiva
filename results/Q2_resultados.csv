@@ -1,0 +1,4 @@
+"Modelo","RMSE"
+"Árvore única",75958.7305974929
+"Bagging",72732.507021809
+"Bagging + Subespaço (m=3)",82523.3872817067
