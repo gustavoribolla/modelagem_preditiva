@@ -6,18 +6,42 @@ suppressPackageStartupMessages({
   library(ranger)
 })
 
-# Dados
-paths <- c("data/used_cars.csv", "used_cars.csv", "../data/used_cars.csv")
-path  <- paths[file.exists(paths)]
-if (!length(path)) stop(sprintf("Não achei used_cars.csv. WD=%s", getwd()))
-cars <- read.csv(path[1], stringsAsFactors = TRUE)
+# Pastas necessárias
+for (d in c("images/A2", "results")) dir.create(d, showWarnings = FALSE, recursive = TRUE)
 
-# split 50/50 e alinhar níveis fator no teste
+# Helper para localizar o CSV
+find_file <- function(fname) {
+  cand <- c(file.path("data", fname),
+            fname,
+            file.path("..", "data", fname))
+  hit <- cand[file.exists(cand)]
+  if (!length(hit)) stop(sprintf("Arquivo '%s' não encontrado. Coloque-o em 'data/'. WD=%s", fname, getwd()))
+  hit[1]
+}
+
+# Ler dados + checagem mínima
+path <- find_file("used_cars.csv")
+cars <- read.csv(path, stringsAsFactors = TRUE)
+
+if (!"price" %in% names(cars)) {
+  stop("A coluna 'price' (alvo) não foi encontrada em used_cars.csv.")
+}
+# Garantir que price é numérico
+if (!is.numeric(cars$price)) {
+  suppressWarnings({
+    cars$price <- as.numeric(as.character(cars$price))
+  })
+  if (anyNA(cars$price)) stop("A coluna 'price' não pôde ser convertida para numérica sem NAs.")
+}
+
+# Split 50/50 e alinhar níveis fator no teste
 split_id <- sample(seq_len(nrow(cars)), floor(0.5*nrow(cars)))
 tr <- cars[split_id, , drop = FALSE]
 te <- cars[-split_id, , drop = FALSE]
 for (cn in names(tr)) {
-  if (is.factor(tr[[cn]])) te[[cn]] <- factor(as.character(te[[cn]]), levels = levels(tr[[cn]]))
+  if (is.factor(tr[[cn]])) {
+    te[[cn]] <- factor(as.character(te[[cn]]), levels = levels(tr[[cn]]))
+  }
 }
 
 y_test <- te$price
@@ -53,11 +77,11 @@ plot(y_test, p_rf, pch = 16, cex = 0.7,
      main = sprintf("Previsto vs Observado — Random Forest (RMSE=%.2f)", rmse_rf))
 abline(0,1,lty=2); dev.off()
 
-# CatBoost (deixei opcional para quando não tinha conseguido instalar)
+# CatBoost
 has_cb <- requireNamespace("catboost", quietly = TRUE)
 if (has_cb) {
   library(catboost)
-  # one-hot consistente para evitar lidar com cat_features manualmente
+  # One-hot consistente
   mm_all <- model.matrix(price ~ ., data = rbind(tr, te))
   mm_tr  <- mm_all[seq_len(nrow(tr)), -1, drop = FALSE]
   mm_te  <- mm_all[-seq_len(nrow(tr)), -1, drop = FALSE]
@@ -96,6 +120,4 @@ res <- data.frame(
 )
 
 print(res, row.names = FALSE)
-
-if (!dir.exists("results")) dir.create("results", recursive = TRUE)
 write.csv(res, "results/A2_resultados.csv", row.names = FALSE)

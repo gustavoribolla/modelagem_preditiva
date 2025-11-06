@@ -8,11 +8,26 @@ suppressPackageStartupMessages({
   library(pROC)    # ROC/AUC
 })
 
-# Dados
-paths <- c("data/churn.csv", "churn.csv", "../data/churn.csv")
-path  <- paths[file.exists(paths)]
-if (!length(path)) stop(sprintf("Não achei churn.csv. WD=%s", getwd()))
-churn <- read.csv(path[1], stringsAsFactors = TRUE)
+# Pastas necessárias
+for (d in c("images/A1", "results")) dir.create(d, showWarnings = FALSE, recursive = TRUE)
+
+# Helper para localizar o CSV
+find_file <- function(fname) {
+  cand <- c(file.path("data", fname),
+            fname,
+            file.path("..", "data", fname))
+  hit <- cand[file.exists(cand)]
+  if (!length(hit)) stop(sprintf("Arquivo '%s' não encontrado. Coloque-o em 'data/'. WD=%s", fname, getwd()))
+  hit[1]
+}
+
+# Leitura dos dados + checagem mínima
+path <- find_file("churn.csv")
+churn <- read.csv(path, stringsAsFactors = TRUE)
+
+if (!"Exited" %in% names(churn)) {
+  stop("A coluna 'Exited' não foi encontrada em churn.csv (esperada como variável-alvo).")
+}
 
 # Alvo binário
 churn$Exited <- factor(churn$Exited, levels = c("No","Yes"))
@@ -57,7 +72,8 @@ aucv["Logistic"] <- as.numeric(auc(rocs[["Logistic"]]))
 
 # Árvore de Classificação (tree)
 m_tree <- tree(Exited ~ ., data = tr)
-p_tree <- predict(m_tree, te, type = "vector")[, "Yes"]   # prob da classe "Yes"
+p_tree <- predict(m_tree, te, type = "vector")
+if (is.matrix(p_tree)) p_tree <- p_tree[, "Yes"]
 pred_tree <- factor(ifelse(p_tree >= 0.5, "Yes", "No"), levels = c("No","Yes"))
 acc["Tree"] <- rm.acc(pred_tree, yte)
 rocs[["Tree"]] <- roc(yte01, p_tree, quiet = TRUE)
@@ -69,9 +85,9 @@ p_rf <- predict(m_rf, te)$predictions[, "Yes"]
 pred_rf <- factor(ifelse(p_rf >= 0.5, "Yes", "No"), levels = c("No","Yes"))
 acc["RandomForest"] <- rm.acc(pred_rf, yte)
 rocs[["RandomForest"]] <- roc(yte01, p_rf, quiet = TRUE)
-aucv["RandomForest"] <- as.numeric(auc(rocs[["RandomForest"]]))
+aucv[["RandomForest"]] <- as.numeric(auc(rocs[["RandomForest"]]))
 
-# CatBoost (deixei opcional para quando não tinha conseguido instalar)
+# CatBoost (opcional)
 has_cb <- requireNamespace("catboost", quietly = TRUE)
 if (has_cb) {
   library(catboost)
@@ -81,7 +97,7 @@ if (has_cb) {
   te_cb <- droplevels(te[!is.na(te$Exited), , drop = FALSE])
   ytr01 <- as.integer(tr_cb$Exited == "Yes")
 
-  # one-hot consistente p/ o subconjunto (garante mesmas colunas)
+  # One-hot consistente p/ o subconjunto
   mm_all_cb <- model.matrix(Exited ~ ., data = rbind(tr_cb, te_cb))
   mm_tr_cb  <- mm_all_cb[seq_len(nrow(tr_cb)), -1, drop = FALSE]
   mm_te_cb  <- mm_all_cb[-seq_len(nrow(tr_cb)), -1, drop = FALSE]
@@ -100,7 +116,7 @@ if (has_cb) {
 
   acc["CatBoost"] <- rm.acc(pred_cb, te_cb$Exited)
   rocs[["CatBoost"]] <- roc(as.integer(te_cb$Exited == "Yes"), p_cb, quiet = TRUE)
-  aucv["CatBoost"] <- as.numeric(auc(rocs[["CatBoost"]]))
+  aucv[["CatBoost"]] <- as.numeric(auc(rocs[["CatBoost"]]))
 } else {
   message("CatBoost não instalado — pulando esse modelo.")
 }
@@ -117,15 +133,18 @@ res <- data.frame(
 )
 
 print(res, row.names = FALSE)
-if (!dir.exists("results")) dir.create("results", recursive = TRUE)
 write.csv(res, "results/A1_resultados.csv", row.names = FALSE)
 
 # ROC de todos
-png("images/A1/A1_ROC_all.png", width = 1200, height = 800, res = 120)
-nm <- names(rocs)
-plot(rocs[[nm[1]]], main = "Churn — ROC (todos os modelos)")
-if (length(nm) >= 2) for (i in 2:length(nm)) plot(rocs[[nm[i]]], add = TRUE, lty = i)
-legend("bottomright",
-       legend = paste0(names(aucv), " (AUC=", sprintf("%.3f", aucv), ")"),
-       lty = 1:length(nm), bty = "n")
-dev.off()
+if (length(models) >= 1) {
+  png("images/A1/A1_ROC_all.png", width = 1200, height = 800, res = 120)
+  nm <- names(rocs)
+  plot(rocs[[nm[1]]], main = "Churn — ROC (todos os modelos)")
+  if (length(nm) >= 2) for (i in 2:length(nm)) plot(rocs[[nm[i]]], add = TRUE, lty = i)
+  legend("bottomright",
+         legend = paste0(names(aucv), " (AUC=", sprintf("%.3f", aucv), ")"),
+         lty = 1:length(nm), bty = "n")
+  dev.off()
+} else {
+  message("Nenhum modelo disponível para plotar ROC.")
+}
