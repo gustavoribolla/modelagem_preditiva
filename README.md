@@ -1,7 +1,7 @@
 # APS Modelagem Preditiva
 
-Projeto analítico que aplica técnicas de modelagem preditiva para compreender padrões e antecipar comportamentos a partir de dados reais.  
-O estudo envolve a construção, comparação e interpretação de diferentes modelos de **classificação** e **regressão**, buscando transformar dados em decisões com base estatística.
+Projeto analítico que aplica técnicas de modelagem preditiva para compreender padrões e antecipar comportamentos a partir de dados reais.
+O estudo envolve a construção, comparação e interpretação de modelos de **classificação** e **regressão**, transformando dados em decisões com base estatística.
 
 ---
 
@@ -10,82 +10,96 @@ O estudo envolve a construção, comparação e interpretação de diferentes mo
 ```
 modelagem_preditiva/
 │
-├── code/                           # scripts de análise e modelagem
-├── data/                           # conjuntos de dados brutos e processados (⚠️ ignorados pelo Git)
+├── code/                           # scripts de análise e modelagem (Q1, Q2, Q3, Q4, A1, A2)
+├── data/                           # conjuntos de dados (não versionados)
 ├── docs/                           # enunciado da APS e relatório final
-├── images/                         # gráficos, curvas ROC e outras visualizações
-├── results/                        # arquivos csv's com os resultados da A1 e A2
-├── .gitignore                      # arquivos e pastas ignorados no versionamento
-├── main.R                          # arquivo pai, que gere os exercícios contidos na pasta code
-├── modelagem_preditiva.Rproj       # arquivo RStudio do projeto 
+├── images/                         # gráficos (gerados automaticamente)
+├── results/                        # tabelas de resultados (geradas automaticamente)
+├── .gitignore                      # arquivos/pastas ignorados no versionamento
+├── main.R                          # orquestra a execução dos exercícios em code/
+├── modelagem_preditiva.Rproj       # projeto RStudio
 └── README.md                       # visão geral do projeto
-
 ```
 
 ---
 
 ## Objetivos
 
-- Desenvolver modelos preditivos aplicados a **cenários reais** (clientes e mercado automotivo);  
-- Comparar o desempenho de algoritmos em termos de **acurácia**, **AUC** e **RMSE**;  
-- Discutir a influência do **viés**, **variância** e **aleatorização** nos resultados;  
-- Gerar **insights interpretáveis** para apoio à tomada de decisão.
+* Desenvolver modelos preditivos em **cenários reais** (churn e mercado automotivo).
+* Comparar algoritmos via **Acurácia**, **AUC** e **RMSE**.
+* Discutir **viés vs. variância** e **aleatorização** (bagging/Random Forest).
+* Gerar **insights interpretáveis** para decisão.
 
 ---
 
-### Pasta `data/`
+## Pasta `data/`
 
-A pasta `data/` contém todos os conjuntos de dados utilizados nas análises, divididos por aplicação e etapa.
-Esses arquivos **não são versionados no GitHub** por questões de tamanho e privacidade, mas devem estar disponíveis localmente para a execução do projeto.
+A pasta `data/` contém os conjuntos de dados **necessários para rodar os scripts**.
+Os arquivos **não são versionados no GitHub**; coloque-os localmente antes da execução.
 
-| Arquivo               | Descrição                                                                                             |
-| --------------------- | ----------------------------------------------------------------------------------------------------- |
-| **`Q1_training.csv`** | Conjunto de **treinamento** utilizado para ajustar os modelos da Questão 1 (classificação binária).   |
-| **`Q1_test.csv`**     | Conjunto de **teste** correspondente à Questão 1, usado para calcular a AUC e comparar modelos.       |
-| **`churn.csv`**       | Base de dados de **clientes bancários**, utilizada na Aplicação 1 para prever o cancelamento (churn). |
-| **`used_cars.csv`**   | Dados de **veículos Mercedes usados**, aplicados na regressão da Aplicação 2 para estimar preços.     |
-| **`california.csv`**  | Base **California Housing**, usada nas Questões 2–4 para explorar bagging, random forests e erro OOB. |
+| Arquivo           | Uso                                    |
+| ----------------- | -------------------------------------- |
+| `Q1_training.csv` | Treinamento da **Q1** (classificação). |
+| `Q1_test.csv`     | Teste da **Q1** (cálculo de AUC).      |
+| `churn.csv`       | Base de **churn** (A1).                |
+| `used_cars.csv`   | Base de **carros** usados (A2).        |
+| `california.csv`  | **California Housing** (Q2–Q4).        |
 
-> ⚠️ Caso os arquivos não estejam presentes, é necessário colocá-los manualmente na pasta `data/` antes de rodar os scripts.
+> Se os arquivos não estiverem em `data/`, os scripts tentam caminhos alternativos (`./`, `../data/`) e mostram uma **mensagem clara** se não encontrarem.
 
 ---
 
-## Execução do Projeto
+## Execução
 
-O projeto pode ser executado no **VS Code** e **RStudio**.
+O projeto pode ser executado no **RStudio** ou **VS Code** (com R).
 
-### Passos iniciais
+### 1) Clonar o repositório
 
-1. Clone este repositório:
 ```bash
-   git clone https://github.com/gustavoribolla/modelagem_preditiva.git
-   cd modelagem_preditiva
+git clone https://github.com/gustavoribolla/modelagem_preditiva.git
+cd modelagem_preditiva
 ```
 
-2. Abra no **VS Code** ou **RStudio**.
+### 2) Abrir no RStudio (ou VS Code)
 
-3. Instale as bibliotecas necessárias:
+### 3) Instalar bibliotecas
 
-   ```r
-   install.packages(c("tidyverse", "tree", "ranger", "pROC", "class", "catboost"))
-   ```
+```r
+install.packages(c("tree","ranger","pROC","class"))
+# CatBoost (os scripts funcionam sem ele; se não estiver instalado, é ignorado)
+# install.packages("catboost", repos = c("https://cloud.r-project.org",
+#                                        "https://catboost-r.s3.eu-central-1.amazonaws.com/cran/latest/"))
+```
 
-4. Execute o script principal:
+### 4) Colocar os dados em `data/`
 
-   ```r
-   source("code/main.R")
-   ```
+### 5) Rodar
 
-5. As figuras geradas serão salvas automaticamente na pasta `images/` e os resultados das aplicações na pasta `results/`.
+* Tudo de uma vez:
+
+```r
+source("main.R")
+```
+
+* Ou por exercício (ex.: Q2):
+
+```r
+source("code/Q2.R")
+```
+
+**Saídas automáticas:**
+
+* Figuras em `images/<exercicio>/...` (ex.: `images/Q4/Q4_OOB_vs_Test.png`).
+* Tabelas em `results/` (ex.: `results/A1_resultados.csv`, `results/Q4_oob_vs_test.csv`).
+
+> Os scripts **criam as pastas** `images/<exercicio>` e `results` se não existirem.
 
 ---
 
 ## Relatório
 
-O relatório completo está disponível em:
-📄 [Acesse aqui](https://alinsperedu-my.sharepoint.com/:w:/g/personal/gustavocr2_al_insper_edu_br/ES2YJpYvL7BOj9zKbNkkS_MBnUZtruXpNpnpJ3LVVA7_EA?e=1Rf1pi)
-
-> O relatório apresenta a fundamentação teórica, resultados experimentais, discussões e conclusões do projeto.
+📄 Link para o relatório completo (teoria, resultados e discussão):
+[Acesse aqui](https://alinsperedu-my.sharepoint.com/:w:/g/personal/gustavocr2_al_insper_edu_br/ES2YJpYvL7BOj9zKbNkkS_MBnUZtruXpNpnpJ3LVVA7_EA?e=1Rf1pi)
 
 ---
 
@@ -95,29 +109,29 @@ O relatório completo está disponível em:
 * Árvores de Classificação e Regressão
 * Bagging e Random Forests
 * k-NN (k-Nearest Neighbors)
-* CatBoost
+* CatBoost *(opcional nos scripts)*
 
 ---
 
 ## Aplicações
 
-* **Problema de churn:** previsão de cancelamento de clientes em uma instituição bancária.
-* **Preço de automóveis usados:** estimativa de valor de mercado com base em atributos de veículos Mercedes.
+* **Churn (A1):** previsão de cancelamento de clientes bancários.
+* **Preço de automóveis (A2):** estimativa de valor de mercado (Mercedes).
 
 ---
 
-## Conceitos-Chave Abordados
+## Conceitos-Chave
 
-* Relação entre **viés** e **variância**
-* Uso de **bootstrap** no bagging
-* Aleatorização de splits em **Random Forests**
-* Estimativa de erro **Out-of-Bag (OOB)**
-* Comparação de **curvas ROC** e **AUC**
+* **Viés × Variância**
+* **Bootstrap/Bagging**
+* **Aleatorização de splits** (Random Forest)
+* **Erro Out-of-Bag (OOB)**
+* **ROC/AUC** e **RMSE**
 
 ---
 
 ## Autor
 
-**Gustavo Colombi Ribolla**<br>
-Estudante de Ciência da Computação - Insper<br>
-📫 [linkedin.com/in/gustavoribolla](https://linkedin.com/in/gustavoribolla)
+**Gustavo Colombi Ribolla**
+Estudante de Ciência da Computação - Insper
+🔗 [linkedin.com/in/gustavoribolla](https://linkedin.com/in/gustavoribolla)
